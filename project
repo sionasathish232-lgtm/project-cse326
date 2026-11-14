@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#153a2b">
+<title>FreshMart — The Fresh Edit</title>
+
+<style>
+:root{
+  --forest:#153a2b;
+  --green:#2f704d;
+  --mint:#eaf3e9;
+  --cream:#fbfaf6;
+  --ink:#202720;
+  --muted:#737c73;
+  --line:#e5e8df;
+  --gold:#c9a96e;
+  --shadow:0 14px 40px rgba(31,52,38,.09)
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  background:var(--cream);
+  color:var(--ink)
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+
+.top-note{
+  text-align:center;
+  background:var(--forest);
+  color:#f7f5ed;
+  padding:9px 12px;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+
+header{
+  height:76px;
+  background:rgba(251,250,246,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 6%;
+  position:sticky;
+  top:0;
+  z-index:20
+}
+.brand{
+  font-family:Georgia,serif;
+  font-size:27px;
+  color:var(--forest);
+  font-weight:bold;
+  letter-spacing:-1px
+}
+.brand span{color:var(--green)}
+.nav{display:flex;gap:30px}
+.nav a{
+  color:#434b43;
+  text-decoration:none;
+  font-size:14px
+}
+.nav a:hover{color:var(--green)}
+.cart-link{
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:white;
+  padding:10px 16px;
+  color:var(--forest);
+  font-weight:600
+}
+.count{
+  display:inline-grid;
+  place-items:center;
+  background:var(--forest);
+  color:white;
+  border-radius:50%;
+  width:22px;
+  height:22px;
+  font-size:11px;
+  margin-left:6px
+}
+
+.hero{
+  min-height:440px;
+  margin:24px auto 0;
+  width:92%;
+  max-width:1440px;
+  border-radius:22px;
+  overflow:hidden;
+  position:relative;
+  background:
+    linear-gradient(90deg,rgba(16,38,27,.83),rgba(16,38,27,.15)),
+    url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1800&auto=format&fit=crop') center/cover;
+  display:flex;
+  align-items:center
+}
+.hero-content{
+  padding:7%;
+  color:white;
+  max-width:690px
+}
+.eyebrow{
+  color:#d9c79f;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  font-size:12px;
+  font-weight:700
+}
+.hero h1{
+  font:clamp(42px,6vw,74px)/1.04 Georgia,serif;
+  margin:18px 0
+}
+.hero p{
+  font-size:17px;
+  line-height:1.7;
+  color:#f0f1eb;
+  max-width:470px
+}
+.primary-btn{
+  display:inline-block;
+  margin-top:26px;
+  background:#d7bb82;
+  color:#173326;
+  text-decoration:none;
+  border:0;
+  padding:14px 23px;
+  border-radius:7px;
+  font-weight:700
+}
+.primary-btn:hover{background:#e6ce9d}
+
+main{
+  width:90%;
+  max-width:1320px;
+  margin:0 auto
+}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin:56px 0 22px;
+  gap:18px
+}
+.section-head h2{
+  font:36px Georgia,serif;
+  color:var(--forest)
+}
+.section-head p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:7px
+}
+.toolbar{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:22px
+}
+.search{flex:1;position:relative}
+.search input{
+  width:100%;
+  height:48px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:white;
+  padding:0 16px 0 42px;
+  outline:none
+}
+.search input:focus,
+.field input:focus,
+.field textarea:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px #2f704d18
+}
+.search:before{
+  content:'⌕';
+  position:absolute;
+  left:15px;
+  top:8px;
+  font-size:25px;
+  color:var(--muted)
+}
+.categories{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-bottom:26px
+}
+.category{
+  border:1px solid var(--line);
+  background:white;
+  color:#4d554d;
+  border-radius:999px;
+  padding:9px 15px;
+  font-size:13px
+}
+.category.active,
+.category:hover{
+  background:var(--forest);
+  border-color:var(--forest);
+  color:white
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:20px
+}
+.product{
+  background:white;
+  border:1px solid #eef0e9;
+  border-radius:13px;
+  overflow:hidden;
+  transition:.22s;
+  position:relative
+}
+.product:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow)
+}
+.photo{
+  height:205px;
+  background:#eff1e9;
+  overflow:hidden
+}
+.photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .35s
+}
+.product:hover .photo img{transform:scale(1.04)}
+.tag{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:#fffdf7;
+  color:var(--forest);
+  border-radius:99px;
+  padding:6px 10px;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:700
+}
+.info{padding:15px}
+.category-name{
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.12em
+}
+.info h3{
+  font:20px Georgia,serif;
+  margin:7px 0 5px
+}
+.unit{font-size:12px;color:var(--muted)}
+.product-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:15px
+}
+.price{
+  font-weight:700;
+  color:var(--forest);
+  font-size:17px
+}
+.add-btn{
+  background:var(--forest);
+  color:white;
+  border:0;
+  border-radius:7px;
+  padding:9px 13px;
+  font-size:12px;
+  font-weight:700
+}
+.add-btn:hover{background:var(--green)}
+.empty-products{
+  grid-column:1/-1;
+  text-align:center;
+  padding:50px;
+  color:var(--muted)
+}
+
+.order-area{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:24px;
+  align-items:start;
+  margin:56px 0 70px
+}
+.panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:25px;
+  box-shadow:0 6px 24px rgba(31,52,38,.035)
+}
+.panel h2{
+  font:30px Georgia,serif;
+  color:var(--forest);
+  margin-bottom:6px
+}
+.panel-sub{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:22px
+}
+.cart-empty{
+  background:#f6f7f1;
+  border-radius:10px;
+  padding:24px;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px
+}
+.cart-items{display:grid;gap:14px}
+.cart-row{
+  display:grid;
+  grid-template-columns:58px 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding-bottom:13px;
+  border-bottom:1px solid var(--line)
+}
+.cart-row img{
+  height:58px;
+  width:58px;
+  border-radius:8px;
+  object-fit:cover
+}
+.cart-row h4{
+  font:16px Georgia,serif;
+  margin-bottom:4px
+}
+.cart-row small{color:var(--muted)}
+.qty{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:7px
+}
+.qty button{
+  width:24px;
+  height:24px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:white;
+  color:var(--forest)
+}
+.remove{
+  border:0;
+  background:none;
+  color:#9b5c4e;
+  font-size:12px;
+  margin-left:6px
+}
+.line-total{
+  font-weight:700;
+  color:var(--forest);
+  white-space:nowrap
+}
+.totals{
+  margin-top:18px;
+  display:grid;
+  gap:10px
+}
+.total-line{
+  display:flex;
+  justify-content:space-between;
+  color:#5e675e;
+  font-size:14px
+}
+.total-line.grand{
+  border-top:1px solid var(--line);
+  padding-top:13px;
+  font-size:17px;
+  color:var(--forest);
+  font-weight:700
+}
+.field{margin-bottom:14px}
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#495249;
+  margin-bottom:6px
+}
+.field input,
+.field textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#fff;
+  padding:12px;
+  outline:none
+}
+.field textarea{
+  min-height:78px;
+  resize:vertical
+}
+.place-btn{
+  width:100%;
+  border:0;
+  border-radius:8px;
+  background:var(--forest);
+  color:white;
+  padding:14px;
+  font-weight:700;
+  margin-top:5px
+}
+.place-btn:hover{background:var(--green)}
+.place-btn:disabled{opacity:.45;cursor:not-allowed}
+.orders-list{
+  margin-top:18px;
+  display:grid;
+  gap:10px
+}
+.order-card{
+  background:#f5f7f1;
+  border-radius:9px;
+  padding:13px;
+  font-size:13px
+}
+.order-card strong{color:var(--forest)}
+.notice{
+  min-height:20px;
+  margin-top:10px;
+  font-size:13px;
+  color:var(--green)
+}
+footer{
+  background:var(--forest);
+  color:#e6eee6;
+  padding:30px 6%;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  font-size:13px
+}
+footer strong{
+  font:22px Georgia,serif;
+  color:white
+}
+
+@media(max-width:1000px){
+  .products{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .order-area{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  header{
+    height:auto;
+    min-height:68px;
+    padding:12px 5%;
+    flex-wrap:wrap;
+    gap:12px
+  }
+  .brand{font-size:23px}
+  .nav{
+    order:3;
+    width:100%;
+    justify-content:center;
+    gap:24px
+  }
+  .hero{
+    min-height:390px;
+    width:94%;
+    background-position:60% center
+  }
+  .hero-content{padding:8%}
+  .hero p{font-size:15px}
+  .section-head{
+    align-items:start;
+    flex-direction:column;
+    margin-top:42px
+  }
+  .section-head h2{font-size:30px}
+  .products{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px
+  }
+  .photo{height:155px}
+  .info{padding:12px}
+  .info h3{font-size:17px}
+  .product-foot{
+    align-items:start;
+    gap:8px;
+    flex-direction:column
+  }
+  .add-btn{width:100%}
+  .toolbar{
+    flex-direction:column;
+    align-items:stretch
+  }
+  .order-area{
+    grid-template-columns:1fr;
+    margin-top:42px
+  }
+  .panel{padding:19px}
+  footer{flex-direction:column}
+}
+@media(max-width:380px){
+  .products{grid-template-columns:1fr}
+  .photo{height:210px}
+}
+</style>
+</head>
+
+<body>
+<div class="top-note">Fresh picks, delivered with care · Free delivery on orders over ₹499</div>
+
+<header>
+  <a class="brand" href="#home" style="text-decoration:none">Fresh<span>Mart</span></a>
+  <nav class="nav">
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#orders">Cart &amp; Orders</a>
+  </nav>
+  <button class="cart-link" onclick="document.getElementById('orders').scrollIntoView({behavior:'smooth'})">
+    Your cart <span class="count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="eyebrow">The Fresh Edit · Since 2020</div>
+    <h1>Good food.<br>Grown with care.</h1>
+    <p>Thoughtfully selected everyday essentials, farm fresh produce and pantry favourites delivered to your door.</p>
+    <a class="primary-btn" href="#shop">Explore the collection&nbsp; →</a>
+  </div>
+</section>
+
+<main>
+  <section id="shop">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" style="color:var(--green)">Curated for your kitchen</div>
+        <h2>Shop the essentials</h2>
+        <p>Fresh quality, fair prices, delivered right to you.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <input id="search" type="search" placeholder="Search apples, milk, pantry..." oninput="renderProducts()" aria-label="Search products">
+      </div>
+    </div>
+
+    <div class="categories" id="categories"></div>
+    <div class="products" id="productList"></div>
+  </section>
+
+  <section id="orders" class="order-area">
+    <div class="panel">
+      <h2>Your cart</h2>
+      <p class="panel-sub">Review your items and adjust quantities before ordering.</p>
+      <div id="cartContents"></div>
+      <div id="totals"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Place an order</h2>
+      <p class="panel-sub">Add your delivery details to create your order.</p>
+
+      <form id="orderForm" onsubmit="placeOrder(event)">
+        <div class="field">
+          <label for="customerName">Full name</label>
+          <input id="customerName" required placeholder="Your name">
+        </div>
+        <div class="field">
+          <label for="customerPhone">Phone number</label>
+          <input id="customerPhone" required type="tel" pattern="[0-9+() -]{8,}" placeholder="Your phone number">
+        </div>
+        <div class="field">
+          <label for="customerAddress">Delivery address</label>
+          <textarea id="customerAddress" required placeholder="House / street, area, city"></textarea>
+        </div>
+        <button class="place-btn" id="placeButton" type="submit" disabled>Place order · ₹0</button>
+        <div class="notice" id="notice" role="status"></div>
+      </form>
+
+      <div id="orderHistory"></div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <strong>FreshMart</strong>
+  <span>Fresh choices for a happier everyday. © 2026 FreshMart</span>
+</footer>
+
+<script>
+const products = [
+  {
+    id:'apples',
+    name:'Fresh Apples',
+    category:'Fruits',
+    price:120,
+    unit:'per kg',
+    image:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600',
+    tag:'Best seller'
+  },
+  {
+    id:'banana',
+    name:'Banana',
+    category:'Fruits',
+    price:50,
+    unit:'per dozen',
+    image:'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=600',
+    tag:'Fresh'
+  },
+  {
+    id:'orange',
+    name:'Orange',
+    category:'Fruits',
+    price:80,
+    unit:'per kg',
+    image:'https://images.unsplash.com/photo-1547514701-42782101795e?w=600'
+  },
+  {
+    id:'tomato',
+    name:'Tomato',
+    category:'Vegetables',
+    price:30,
+    unit:'per kg',
+    image:'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=600'
+  },
+  {
+    id:'potato',
+    name:'Potato',
+    category:'Vegetables',
+    price:35,
+    unit:'per kg',
+    image:'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600'
+  },
+  {
+    id:'onion',
+    name:'Onion',
+    category:'Vegetables',
+    price:40,
+    unit:'per kg',
+    image:'https://images.unsplash.com/photo-1508747703725-719777637510?w=600'
+  },
+  {
+    id:'spinach',
+    name:'Spinach',
+    category:'Vegetables',
+    price:25,
+    unit:'per bunch',
+    image:'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=600',
+    tag:'Fresh'
+  },
+  {
+    id:'milk',
+    name:'Milk Pack',
+    category:'Dairy & Eggs',
+    price:60,
+    unit:'per pack',
+    image:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600',
+    tag:'Daily pick'
+  },
+  {
+    id:'eggs',
+    name:'Farm Eggs',
+    category:'Dairy & Eggs',
+    price:90,
+    unit:'per dozen',
+    image:'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=600'
+  },
+  {
+    id:'paneer',
+    name:'Paneer',
+    category:'Dairy & Eggs',
+    price:90,
+    unit:'200 g',
+    image:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600'
+  },
+  {
+    id:'curd',
+    name:'Fresh Curd',
+    category:'Dairy & Eggs',
+    price:35,
+    unit:'per cup',
+    image:'https://images.unsplash.com/photo-1571212515416-fca3aa6b33e4?w=600'
+  },
+  {
+    id:'bread',
+    name:'Artisan Bread',
+    category:'Bakery',
+    price:40,
+    unit:'per loaf',
+    image:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600'
+  },
+  {
+    id:'rice',
+    name:'Premium Rice',
+    category:'Pantry',
+    price:80,
+    unit:'per kg',
+    image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600'
+  },
+  {
+    id:'chocolate',
+    name:'Chocolate',
+    category:'Snacks',
+    price:25,
+    unit:'per bar',
+    image:'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600'
+  },
+  {
+    id:'drink',
+    name:'Cold Drink',
+    category:'Beverages',
+    price:45,
+    unit:'per bottle',
+    image:'https://images.unsplash.com/photo-1527960471264-932f39eb5846?w=600'
+  }
+];
+
+const categoryList = [
+  'All',
+  'Fruits',
+  'Vegetables',
+  'Dairy & Eggs',
+  'Bakery',
+  'Pantry',
+  'Snacks',
+  'Beverages'
+];
+
+let activeCategory = 'All';
+let cart = JSON.parse(localStorage.getItem('freshmartCart') || '{}');
+let orders = JSON.parse(localStorage.getItem('freshmartOrders') || '[]');
+
+const money = value => '₹' + Number(value).toLocaleString('en-IN');
+
+function saveCart() {
+  localStorage.setItem('freshmartCart', JSON.stringify(cart));
+}
+
+function renderCategories() {
+  document.getElementById('categories').innerHTML = categoryList.map(category =>
+    `<button class="category ${activeCategory === category ? 'active' : ''}"
+      onclick="setCategory('${category}')">${category}</button>`
+  ).join('');
+}
+
+function setCategory(category) {
+  activeCategory = category;
+  renderCategories();
+  renderProducts();
+}
+
+function renderProducts() {
+  const query = document.getElementById('search').value.trim().toLowerCase();
+
+  const visibleProducts = products.filter(product =>
+    (activeCategory === 'All' || product.category === activeCategory) &&
+    (
+      product.name.toLowerCase().includes(query) ||
+      product.category.toLowerCase().includes(query)
+    )
+  );
+
+  const area = document.getElementById('productList');
+
+  if (!visibleProducts.length) {
+    area.innerHTML = '<div class="empty-products">No products found. Try another search.</div>';
+    return;
+  }
+
+  area.innerHTML = visibleProducts.map(product => `
+    <article class="product">
+      <div class="photo">
+        <img src="${product.image}" alt="${product.name}" loading="lazy">
+      </div>
+      ${product.tag ? `<span class="tag">${product.tag}</span>` : ''}
+      <div class="info">
+        <div class="category-name">${product.category}</div>
+        <h3>${product.name}</h3>
+        <div class="unit">${product.unit}</div>
+        <div class="product-foot">
+          <span class="price">${money(product.price)}</span>
+          <button class="add-btn" onclick="addToCart('${product.id}')">＋ Add</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+}
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  saveCart();
+  renderCart();
+}
+
+function changeQty(id, delta) {
+  cart[id] = (cart[id] || 0) + delta;
+
+  if (cart[id] <= 0) {
+    delete cart[id];
+  }
+
+  saveCart();
+  renderCart();
+}
+
+function removeItem(id) {
+  delete cart[id];
+  saveCart();
+  renderCart();
+}
+
+function cartCount() {
+  return Object.values(cart).reduce((total, quantity) => total + quantity, 0);
+}
+
+function subtotal() {
+  return Object.entries(cart).reduce((sum, [id, quantity]) => {
+    const product = products.find(item => item.id === id);
+    return sum + product.price * quantity;
+  }, 0);
+}
+
+function renderCart() {
+  const count = cartCount();
+  const sub = subtotal();
+  const delivery = sub === 0 || sub >= 499 ? 0 : 35;
+  const total = sub + delivery;
+
+  document.getElementById('cartCount').textContent = count;
+
+  const rows = Object.entries(cart);
+  const contents = document.getElementById('cartContents');
+
+  if (!rows.length) {
+    contents.innerHTML = `
+      <div class="cart-empty">
+        Your cart is empty.<br>
+        Choose a few fresh favourites to get started.
+      </div>
+    `;
+  } else {
+    contents.innerHTML = '<div class="cart-items">' + rows.map(([id, quantity]) => {
+      const product = products.find(item => item.id === id);
+
+      return `
+        <div class="cart-row">
+          <img src="${product.image}" alt="">
+          <div>
+            <h4>${product.name}</h4>
+            <small>${money(product.price)} · ${product.unit}</small>
+            <div class="qty">
+              <button type="button" aria-label="Decrease ${product.name}"
+                onclick="changeQty('${id}',-1)">−</button>
+              <span>${quantity}</span>
+              <button type="button" aria-label="Increase ${product.name}"
+                onclick="changeQty('${id}',1)">+</button>
+              <button class="remove" type="button"
+                onclick="removeItem('${id}')">Remove</button>
+            </div>
+          </div>
+          <span class="line-total">${money(product.price * quantity)}</span>
+        </div>
+      `;
+    }).join('') + '</div>';
+  }
+
+  document.getElementById('totals').innerHTML = rows.length ? `
+    <div class="totals">
+      <div class="total-line">
+        <span>Subtotal</span><span>${money(sub)}</span>
+      </div>
+      <div class="total-line">
+        <span>Delivery</span><span>${delivery === 0 ? 'Free' : money(delivery)}</span>
+      </div>
+      ${sub > 0 && sub < 499 ? `
+        <div class="total-line">
+          <span>Add ${money(499 - sub)} for free delivery</span><span></span>
+        </div>
+      ` : ''}
+      <div class="total-line grand">
+        <span>Total</span><span>${money(total)}</span>
+      </div>
+    </div>
+  ` : '';
+
+  const button = document.getElementById('placeButton');
+  button.disabled = count === 0;
+  button.textContent = `Place order · ${money(total)}`;
+}
+
+function placeOrder(event) {
+  event.preventDefault();
+
+  if (!cartCount()) return;
+
+  const order = {
+    number: 'FM' + Date.now().toString().slice(-7),
+    name: document.getElementById('customerName').value.trim(),
+    phone: document.getElementById('customerPhone').value.trim(),
+    address: document.getElementById('customerAddress').value.trim(),
+    items: Object.entries(cart).map(([id, quantity]) => ({
+      name: products.find(product => product.id === id).name,
+      quantity
+    })),
+    total: subtotal() + (subtotal() >= 499 ? 0 : 35),
+    date: new Date().toLocaleString()
+  };
+
+  orders.unshift(order);
+  localStorage.setItem('freshmartOrders', JSON.stringify(orders));
+
+  cart = {};
+  saveCart();
+  renderCart();
+  renderOrders();
+
+  document.getElementById('orderForm').reset();
+  document.getElementById('notice').textContent =
+    `Order ${order.number} placed successfully!`;
+}
+
+function renderOrders() {
+  const host = document.getElementById('orderHistory');
+
+  if (!orders.length) {
+    host.innerHTML = '';
+    return;
+  }
+
+  host.innerHTML = `
+    <div class="orders-list">
+      <div class="category-name">Recent orders</div>
+      ${orders.slice(0, 3).map(order => `
+        <div class="order-card">
+          <strong>Order ${order.number}</strong> · ${money(order.total)}<br>
+          ${order.items.map(item => `${item.name} × ${item.quantity}`).join(', ')}<br>
+          <small>${order.date}</small>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+renderCategories();
+renderProducts();
+renderCart();
+renderOrders();
+</script>
+</body>
+</html>
